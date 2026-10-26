@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ひと息 · Japanese instead of scrolling</title>
+<style>
+:root{color-scheme:dark;--bg:#101713;--panel:#19231d;--panel2:#202e25;--ink:#edf1e7;--muted:#a5b4a5;--line:#344439;--green:#bfdf95;--gold:#f0cf91;--red:#ffaaa0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}button,a,input,select,summary{outline-offset:5px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold)}
+button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:13px;padding:12px 17px;transition:background .15s,transform .15s}button:hover:enabled{background:#304332}button:active:enabled{transform:translateY(1px)}button.primary{background:var(--green);border-color:var(--green);color:#142114;font-weight:750}button.primary:hover:enabled{background:#d1edac}button.quiet{background:transparent}button.small{padding:7px 11px;font-size:14px}input,select{border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:11px;border-radius:10px;max-width:100%}a{color:var(--green)}
+header{max-width:1050px;margin:auto;padding:25px 22px 0;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:800;font-size:22px;letter-spacing:-.6px}.brand span{color:var(--green)}.subbrand{font-size:12px;color:var(--muted);letter-spacing:.06em}nav{max-width:1050px;margin:18px auto 0;display:flex;gap:6px;padding:0 22px 16px;border-bottom:1px solid var(--line);overflow:auto}nav button{background:transparent;border-color:transparent;white-space:nowrap;padding:9px 15px}nav button.active{background:var(--panel2);color:var(--green);border-color:var(--line)}
+main{max-width:1000px;margin:auto;padding:28px 22px 65px}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(32px,6vw,49px);line-height:1.15;letter-spacing:-1.5px;margin-bottom:16px}h2{font-size:25px;line-height:1.25;letter-spacing:-.6px}h3{font-size:18px;margin-bottom:8px}.muted{color:var(--muted)}.eyebrow{font-size:12px;font-weight:750;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:13px}.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px}.hero{display:grid;grid-template-columns:1.5fr 1fr;gap:25px;align-items:center;padding:34px}.hero p{max-width:440px}.garden{height:200px;display:flex;align-items:flex-end;justify-content:center;gap:15px;background:radial-gradient(ellipse at 50% 90%,#33492a,transparent 70%);border-bottom:2px solid #586a46}.plant{font-size:60px;filter:saturate(.7)}.plant:nth-child(2){font-size:94px}.plant:nth-child(3){font-size:43px}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.between{justify-content:space-between}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.space{margin-top:22px}.stat{font-size:29px;font-weight:750;letter-spacing:-1px}.label{font-size:13px;color:var(--muted)}.pill{display:inline-block;padding:4px 10px;background:var(--panel2);border:1px solid var(--line);border-radius:99px;font-size:12px;color:var(--muted)}.good{color:var(--green)}.bad{color:var(--red)}.gold{color:var(--gold)}.bar{height:7px;border-radius:9px;background:#304034;overflow:hidden}.bar span{height:100%;background:var(--green);display:block;transition:width .2s}.lesson{display:flex;gap:16px;align-items:flex-start;padding:20px;margin-bottom:11px}.lesson-num{flex-shrink:0;width:40px;height:40px;display:grid;place-items:center;background:var(--panel2);border-radius:12px;font-weight:750;color:var(--green)}.grow{flex:1;min-width:0}.lesson p{font-size:14px;margin-bottom:10px}.lesson.locked{opacity:.65}
+.play{max-width:730px;margin:0 auto}.question{font-size:clamp(26px,5vw,39px);line-height:1.5;letter-spacing:.01em;overflow-wrap:anywhere;margin:24px 0 9px}.reading{font-size:17px;color:var(--muted);margin-bottom:24px;min-height:26px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}.answer{text-align:left;min-height:64px;display:flex;align-items:center;gap:12px}.answer b{font-size:12px;border:1px solid var(--line);border-radius:6px;width:22px;height:24px;display:grid;place-items:center;flex-shrink:0;color:var(--muted)}.answer.correct{border-color:var(--green);background:#2c4328}.answer.wrong{border-color:var(--red);background:#442a27}.feedback{margin-top:23px;padding:17px;border-radius:12px;border:1px solid var(--line);background:var(--bg)}.feedback p{margin:6px 0 12px}.sentence{display:flex;gap:8px;flex-wrap:wrap;min-height:72px;padding:14px;border:1px dashed var(--line);border-radius:12px;margin:20px 0 12px}.tokens{display:flex;flex-wrap:wrap;gap:8px;min-height:60px}.token{font-size:19px;padding:9px 14px}.entry{width:100%;font-size:23px;margin-top:20px}.definition{font-size:22px;color:var(--green);margin:16px 0}.note{border-left:3px solid var(--gold);padding-left:14px;color:var(--muted);font-size:14px}.word-row{display:grid;grid-template-columns:1.2fr 1fr 1.3fr 80px;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px}.word-row strong{font-size:20px;font-weight:500}.word-row small{color:var(--muted)}details{margin-top:15px}summary{cursor:pointer;color:var(--muted)}details p,details li{font-size:14px;color:var(--muted)}.setting{padding:18px 0;border-bottom:1px solid var(--line)}.setting p{margin:4px 0 12px;font-size:14px;color:var(--muted)}.empty{text-align:center;padding:40px 20px}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);max-width:90vw;padding:12px 18px;border:1px solid var(--gold);border-radius:12px;background:#30291e;color:var(--gold);z-index:10}.finish{text-align:center;padding:42px 24px}.finish .big{font-size:65px}.finish h1{font-size:35px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.toolbar input{flex:1;min-width:150px}footer{margin-top:30px;font-size:12px;color:var(--muted)}.hidden{display:none!important}kbd{font:12px system-ui;border:1px solid var(--line);border-radius:5px;padding:2px 5px;color:var(--muted)}.hint{font-size:13px;color:var(--muted)}
+@media(max-width:650px){header{padding-top:18px}.hero{grid-template-columns:1fr;padding:25px}.garden{height:110px}.plant{font-size:42px}.plant:nth-child(2){font-size:67px}.plant:nth-child(3){font-size:34px}.grid{grid-template-columns:1fr}.grid.two{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.card{padding:20px}.answers{grid-template-columns:1fr}.word-row{grid-template-columns:1fr 1fr;gap:5px}.lesson{padding:16px;gap:11px}main{padding-top:22px}.question{font-size:29px}nav{padding-left:12px;padding-right:12px}nav button{padding:9px 10px}.stat{font-size:25px}.label{font-size:11px}.play .card{padding:20px}.row.actions>*{flex:1}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+<div><div class="brand"><span>ひと息</span> hitoiki</div><div class="subbrand">A LITTLE JAPANESE. THEN GO LIVE.</div></div>
+<span class="pill" id="headerStatus">Local progress</span>
+</header>
+<nav aria-label="Main navigation" id="nav"></nav>
+<main id="app"></main>
+<div id="toast" class="toast hidden" role="status"></div>
+<script>
+"use strict";
+/* ==========================================================
+   CONTENT MODULE
+   Independent companion curriculum. Pack numbers are OUR
+   sequence, not claims of exact textbook lesson mapping.
+   Vocabulary format: written|reading|meaning|part of speech
+   Grammar: translation|space-separated tiles|blank tile index|
+            three distractors separated by /|teaching note
+   Add packs with addPack(); add games with registerGame().
+   ========================================================== */
+const PACKS=[];
+function addPack(book,title,focus,words,patterns){
+ const id=PACKS.length+1;
+ const v=words.trim().split("\n").filter(Boolean).map((line,i)=>{
+  const [jp,kana,en,type="noun"]=line.split("|");
+  return {id:`p${id}v${i}`,pack:id,kind:"word",jp,kana,en,type};
+ });
+ const g=patterns.map((line,i)=>{
+  const [en,tiles,index,other,note]=line.split("|"),tokens=tiles.split(" "),blank=Number(index);
+  return {id:`p${id}g${i}`,pack:id,kind:"grammar",en,tokens,blank,answer:tokens[blank],other:other.split("/"),note,jp:tokens.join(""),kana:"",type:"pattern"};
+ });
+ PACKS.push({id,book,title,focus,v,g});
+}
+addPack(1,"Meet someone","People · identity · questions",`
+学生|がくせい|student|noun
+先生|せんせい|teacher|noun
+大学|だいがく|university|noun
+会社員|かいしゃいん|company employee|noun
+友達|ともだち|friend|noun
+日本|にほん|Japan|noun
+英語|えいご|English language|noun
+専攻|せんこう|major (field of study)|noun
+名前|なまえ|name|noun
+何|なに|what|question
+誰|だれ|who|question
+はい|はい|yes|expression
+いいえ|いいえ|no|expression
+私|わたし|I / me|pronoun`,[
+"I am a student.|私 は 学生 です 。|3|でした/ではありません/ですか|A は B です identifies A as B. は is pronounced wa as a topic marker.",
+"Is that person a teacher?|あの人 は 先生 ですか 。|3|です/でした/ではありません|Add か to a polite statement to make a question. あの人 means that person."
+]);
+addPack(1,"Around the café","Objects · ownership · places",`
+本|ほん|book|noun
+辞書|じしょ|dictionary|noun
+時計|とけい|watch / clock|noun
+鞄|かばん|bag|noun
+傘|かさ|umbrella|noun
+財布|さいふ|wallet|noun
+水|みず|water|noun
+お茶|おちゃ|tea|noun
+店|みせ|shop|noun
+駅|えき|station|noun
+これ|これ|this thing|pronoun
+それ|それ|that thing near you|pronoun
+あれ|あれ|that thing over there|pronoun
+どこ|どこ|where|question`,[
+"This is my bag.|これ は 私 の 鞄 です 。|3|を/で/に|の links an owner to a noun: 私の鞄, my bag.",
+"Where is the station?|駅 は どこ ですか 。|2|誰/何/いつ|どこ asks about location. どこですか is the polite question where is it?"
+]);
+addPack(1,"Make a plan","Verbs · days · destinations",`
+食べる|たべる|to eat|verb
+飲む|のむ|to drink|verb
+行く|いく|to go|verb
+帰る|かえる|to return home|verb
+見る|みる|to see / watch|verb
+読む|よむ|to read|verb
+聞く|きく|to listen / ask|verb
+勉強する|べんきょうする|to study|verb
+今日|きょう|today|time
+明日|あした|tomorrow|time
+昨日|きのう|yesterday|time
+毎日|まいにち|every day|time
+朝|あさ|morning|time
+夜|よる|night|time`,[
+"I drink tea.|私 は お茶 を 飲みます 。|3|に/で/へ|を marks the direct object. 飲む becomes 飲みます in the polite present.",
+"I will go to Kyoto tomorrow.|明日 京都 に 行きます 。|2|を/で/と|に marks the destination with 行く. The polite present can describe a future action."
+]);
+addPack(1,"Find your way","Existence · location · past",`
+猫|ねこ|cat|noun
+犬|いぬ|dog|noun
+子供|こども|child|noun
+公園|こうえん|park|noun
+図書館|としょかん|library|noun
+病院|びょういん|hospital|noun
+右|みぎ|right side|noun
+左|ひだり|left side|noun
+上|うえ|above / on top|noun
+下|した|below / underneath|noun
+中|なか|inside|noun
+隣|となり|next door / beside|noun
+ある|ある|to exist (inanimate)|verb
+いる|いる|to exist (animate)|verb`,[
+"There is a cat in the park.|公園 に 猫 が います 。|4|あります/です/でした|います is used for people and animals. あります is used for inanimate things.",
+"I read a book yesterday.|昨日 本 を 読みました 。|3|読みます/読みません/読みませんでした|ました marks polite past affirmative. 読みました means read in the past."
+]);
+addPack(1,"Describe the day","い / な adjectives · opposites",`
+大きい|おおきい|big|い-adjective
+小さい|ちいさい|small|い-adjective
+高い|たかい|expensive / high|い-adjective
+安い|やすい|inexpensive|い-adjective
+新しい|あたらしい|new|い-adjective
+古い|ふるい|old (things)|い-adjective
+暑い|あつい|hot (weather)|い-adjective
+寒い|さむい|cold (weather)|い-adjective
+面白い|おもしろい|interesting|い-adjective
+難しい|むずかしい|difficult|い-adjective
+易しい|やさしい|easy|い-adjective
+静か|しずか|quiet|な-adjective
+賑やか|にぎやか|lively|な-adjective
+好き|すき|liked / fond of|な-adjective`,[
+"This bag is not expensive.|この 鞄 は 高くないです 。|3|高いです/高かったです/高くなかったです|For an い-adjective negative, replace final い with くない. 高い → 高くない.",
+"It is a quiet town.|静かな 町 です 。|0|静か/静かの/静かく|A な-adjective takes な directly before a noun: 静かな町."
+]);
+addPack(1,"Help at home","て-form · requests · permission",`
+開ける|あける|to open something|verb
+閉める|しめる|to close something|verb
+待つ|まつ|to wait|verb
+座る|すわる|to sit down|verb
+立つ|たつ|to stand up|verb
+使う|つかう|to use|verb
+持つ|もつ|to hold / carry|verb
+手伝う|てつだう|to help|verb
+窓|まど|window|noun
+写真|しゃしん|photograph|noun
+電気|でんき|electricity / light|noun
+ちょっと|ちょっと|a little / a moment|adverb`,[
+"Please open the window.|窓 を 開けて ください 。|2|開ける/開けた/開けない|て-form + ください makes a polite request. 開ける → 開けて.",
+"May I take a photo?|写真 を 撮っても いいですか 。|2|撮っては/撮ったら/撮ると|て-form + もいいですか asks permission. 撮る means take a photo."
+]);
+addPack(1,"What is happening?","Ongoing actions · people",`
+働く|はたらく|to work|verb
+住む|すむ|to live / reside|verb
+結婚する|けっこんする|to get married|verb
+知る|しる|to come to know|verb
+兄|あに|my older brother|noun
+姉|あね|my older sister|noun
+弟|おとうと|younger brother|noun
+妹|いもうと|younger sister|noun
+家族|かぞく|family|noun
+長い|ながい|long|い-adjective
+短い|みじかい|short (length)|い-adjective
+親切|しんせつ|kind / helpful|な-adjective`,[
+"My older sister is working now.|姉 は 今 働いています 。|3|働きました/働きません/働きましょう|ている can describe an action in progress. 働く → 働いている.",
+"I live in Osaka.|大阪 に 住んでいます 。|2|住みます/住みましょう/住みません|住んでいる describes the state of residing somewhere. 住む → 住んで."
+]);
+addPack(1,"Say what you think","Short forms · opinions · frequency",`
+思う|おもう|to think|verb
+言う|いう|to say|verb
+作る|つくる|to make|verb
+泳ぐ|およぐ|to swim|verb
+料理|りょうり|cooking / cuisine|noun
+音楽|おんがく|music|noun
+上手|じょうず|skillful|な-adjective
+下手|へた|unskillful|な-adjective
+いつも|いつも|always|adverb
+よく|よく|often / well|adverb
+時々|ときどき|sometimes|adverb
+全然|ぜんぜん|not at all (with negative)|adverb`,[
+"I think tomorrow will be cold.|明日 は 寒い と 思います 。|2|寒いです/寒く/寒くて|Use a plain-form clause before と思います. い-adjectives do not take だ here.",
+"I do not watch TV at all.|テレビ は 全然 見ません 。|3|見ます/見ましょう/見ました|全然 normally pairs with a negative in beginner Japanese: 全然見ません."
+]);
+addPack(1,"Tell a small story","Past short forms · noun descriptions",`
+買う|かう|to buy|verb
+会う|あう|to meet|verb
+遊ぶ|あそぶ|to play / hang out|verb
+走る|はしる|to run|verb
+映画|えいが|film / movie|noun
+手紙|てがみ|letter|noun
+去年|きょねん|last year|time
+先週|せんしゅう|last week|time
+今朝|けさ|this morning|time
+もう|もう|already|adverb
+まだ|まだ|still / not yet|adverb
+一緒に|いっしょに|together|adverb`,[
+"The book I bought yesterday is interesting.|昨日 買った 本 は 面白いです 。|1|買います/買いました/買いましょう|A plain-form clause can modify a noun directly: 昨日買った本.",
+"I think the film was interesting.|映画 は 面白かった と 思います 。|2|面白かったです/面白く/面白いです|The plain past of 面白い is 面白かった. Use it before と to report a past opinion."
+]);
+addPack(1,"Choose your weekend","Comparisons · intentions",`
+旅行|りょこう|travel / trip|noun
+山|やま|mountain|noun
+海|うみ|sea|noun
+春|はる|spring|time
+夏|なつ|summer|time
+秋|あき|autumn|time
+冬|ふゆ|winter|time
+暖かい|あたたかい|warm (weather)|い-adjective
+涼しい|すずしい|cool (weather)|い-adjective
+速い|はやい|fast|い-adjective
+遅い|おそい|slow / late|い-adjective
+一番|いちばん|the most / number one|adverb`,[
+"The train is faster than the bus.|電車 は バス より 速いです 。|3|ほど/まで/から|A は B より adjective means A is more adjective than B.",
+"I intend to go to the sea tomorrow.|明日 海 に 行く つもりです 。|3|行きます/行って/行った|Dictionary form + つもりです expresses an intention."
+]);
+addPack(1,"Try something new","Wanting · experiences · examples",`
+食べ物|たべもの|food|noun
+飲み物|のみもの|beverage|noun
+寿司|すし|sushi|noun
+野菜|やさい|vegetable|noun
+果物|くだもの|fruit|noun
+肉|にく|meat|noun
+魚|さかな|fish|noun
+欲しい|ほしい|wanted / desired|い-adjective
+楽しい|たのしい|fun / enjoyable|い-adjective
+忙しい|いそがしい|busy|い-adjective
+ゆっくり|ゆっくり|slowly / leisurely|adverb
+たくさん|たくさん|a lot / many|adverb`,[
+"I want to eat sushi.|寿司 を 食べたいです 。|2|食べます/食べました/食べません|Verb stem + たい expresses the speaker's desire: 食べる → 食べたい.",
+"I have been to Kyoto.|京都 に 行った ことが あります 。|2|行く/行って/行かない|Past plain form + ことがある describes a past experience."
+]);
+addPack(1,"Look after yourself","Advice · explanations · obligation",`
+風邪|かぜ|a cold (illness)|noun
+薬|くすり|medicine|noun
+頭|あたま|head|noun
+体|からだ|body|noun
+熱|ねつ|fever / heat|noun
+休む|やすむ|to rest / take time off|verb
+寝る|ねる|to sleep / go to bed|verb
+痛い|いたい|painful|い-adjective
+眠い|ねむい|sleepy|い-adjective
+元気|げんき|healthy / energetic|な-adjective
+多分|たぶん|probably|adverb
+すぐ|すぐ|immediately / soon|adverb`,[
+"You had better sleep early.|早く 寝た ほうがいいです 。|1|寝る/寝て/寝ます|Affirmative advice commonly uses past plain form + ほうがいいです.",
+"I have to study.|勉強しなければ なりません 。|0|勉強して/勉強した/勉強する|ない-form minus い + ければなりません expresses obligation."
+]);
+addPack(2,"What can you do?","Potential · reasons · appearances",`
+運転する|うんてんする|to drive|verb
+予約する|よやくする|to make a reservation|verb
+選ぶ|えらぶ|to choose|verb
+習う|ならう|to learn from someone|verb
+外国語|がいこくご|foreign language|noun
+経験|けいけん|experience|noun
+便利|べんり|convenient|な-adjective
+不便|ふべん|inconvenient|な-adjective
+嬉しい|うれしい|happy / glad|い-adjective
+悲しい|かなしい|sad|い-adjective
+大体|だいたい|roughly / generally|adverb
+特に|とくに|especially|adverb`,[
+"I can read Japanese.|日本語 が 読めます 。|2|読みます/読ませます/読まれます|For a godan verb such as 読む, potential changes む to める: 読める.",
+"This cake looks delicious.|この ケーキ は おいしそうです 。|3|おいしいそうです/おいしくそうです/おいしさそうです|Appearance そう attaches to the い-adjective stem: おいしい → おいしそう."
+]);
+addPack(2,"Give and receive","Gifts · wishes · trying actions",`
+あげる|あげる|to give (outward)|verb
+くれる|くれる|to give (toward me / my group)|verb
+もらう|もらう|to receive|verb
+貸す|かす|to lend|verb
+借りる|かりる|to borrow|verb
+贈り物|おくりもの|gift|noun
+誕生日|たんじょうび|birthday|noun
+両親|りょうしん|parents|noun
+祖父|そふ|my grandfather|noun
+祖母|そぼ|my grandmother|noun
+大切|たいせつ|important / precious|な-adjective
+ぜひ|ぜひ|by all means / definitely|adverb`,[
+"My friend gave me a book.|友達 が 私 に 本 を くれました 。|6|あげました/もらいました/借りました|くれる views giving as coming toward the speaker or the speaker's group.",
+"I will try eating this.|これ を 食べてみます 。|2|食べたことがあります/食べなければなりません/食べてはいけません|て-form + みる means try doing something to see what it is like."
+]);
+addPack(2,"Make it happen","Volitional · plans · preparation",`
+決める|きめる|to decide|verb
+準備する|じゅんびする|to prepare|verb
+調べる|しらべる|to investigate / look up|verb
+続ける|つづける|to continue something|verb
+予定|よてい|schedule / plan|noun
+約束|やくそく|promise / appointment|noun
+将来|しょうらい|future|noun
+留学|りゅうがく|study abroad|noun
+必要|ひつよう|necessary|な-adjective
+無理|むり|unreasonable / impossible|な-adjective
+そろそろ|そろそろ|about time / soon|adverb
+ちゃんと|ちゃんと|properly|adverb`,[
+"I am thinking of studying abroad.|留学しよう と 思っています 。|0|留学します/留学して/留学した|Volitional form + と思っている describes an intention that has been in mind.",
+"I will buy the ticket in advance.|切符 を 買っておきます 。|2|買ってしまいました/買ってみました/買ってくれました|ておく means do something in advance or leave it in a prepared state."
+]);
+addPack(2,"Ask for a hand","Favors · sequential actions",`
+教える|おしえる|to teach / tell|verb
+説明する|せつめいする|to explain|verb
+迎える|むかえる|to welcome / pick up|verb
+送る|おくる|to send / escort|verb
+直す|なおす|to fix / correct|verb
+荷物|にもつ|luggage / parcel|noun
+道|みち|road / way|noun
+住所|じゅうしょ|address|noun
+親しい|したしい|close / intimate|い-adjective
+厳しい|きびしい|strict / severe|い-adjective
+本当に|ほんとうに|really / truly|adverb
+さっき|さっき|a short while ago|adverb`,[
+"My friend helped me.|友達 が 手伝って くれました 。|3|あげました/もらいました/おきました|てくれる describes someone doing something beneficial for the speaker.",
+"After eating, I will study.|食べてから 勉強します 。|0|食べるまで/食べたことが/食べたいなら|てから expresses doing one action after completing another."
+]);
+addPack(2,"Pass on a message","Reported information · conditions",`
+連絡する|れんらくする|to contact|verb
+伝える|つたえる|to convey / pass on|verb
+遅れる|おくれる|to be late|verb
+間に合う|まにあう|to be on time|verb
+天気予報|てんきよほう|weather forecast|noun
+雨|あめ|rain|noun
+雪|ゆき|snow|noun
+風|かぜ|wind|noun
+危ない|あぶない|dangerous|い-adjective
+安全|あんぜん|safe|な-adjective
+きっと|きっと|surely / very likely|adverb
+もし|もし|if / supposing|adverb`,[
+"I hear it will rain tomorrow.|明日 は 雨が降る そうです 。|2|雨が降り/雨が降って/雨が降ろう|Hearsay そうです follows a plain clause. It differs from the stem-based appearance そう.",
+"If it rains, I will stay home.|雨が降ったら 家 に います 。|0|雨が降っても/雨が降る前に/雨が降るまで|たら expresses a condition: if or when. 降る → 降ったら."
+]);
+addPack(2,"Things happen","Transitivity · completion · regret",`
+落ちる|おちる|to fall / drop (intransitive)|verb
+落とす|おとす|to drop something|verb
+開く|あく|to open (intransitive)|verb
+閉まる|しまる|to close (intransitive)|verb
+壊れる|こわれる|to break (intransitive)|verb
+壊す|こわす|to break something|verb
+忘れる|わすれる|to forget|verb
+なくす|なくす|to lose something|verb
+鍵|かぎ|key|noun
+故障|こしょう|breakdown / malfunction|noun
+残念|ざんねん|unfortunate / disappointing|な-adjective
+うっかり|うっかり|carelessly / absentmindedly|adverb`,[
+"The door is open.|ドア が 開いています 。|2|開けています/開きましょう/開けましょう|Intransitive 開く describes the door itself. ている can mark a resulting state.",
+"I unfortunately forgot my wallet.|財布 を 忘れてしまいました 。|2|忘れないでください/忘れておきます/忘れたほうがいいです|てしまう can express completion or regret; the English context here signals regret."
+]);
+addPack(2,"Show respect","Honorific speech · polite requests",`
+いらっしゃる|いらっしゃる|to go / come / be (respectful)|verb
+召し上がる|めしあがる|to eat / drink (respectful)|verb
+おっしゃる|おっしゃる|to say (respectful)|verb
+なさる|なさる|to do (respectful)|verb
+ご覧になる|ごらんになる|to see / watch (respectful)|verb
+社長|しゃちょう|company president|noun
+部長|ぶちょう|department manager|noun
+会議|かいぎ|meeting / conference|noun
+失礼|しつれい|rude / discourteous|な-adjective
+丁寧|ていねい|polite / careful|な-adjective
+少々|しょうしょう|a little (formal)|adverb
+どうぞ|どうぞ|please / go ahead|expression`,[
+"The teacher is here.|先生 は いらっしゃいます 。|2|おります/参ります/申します|いらっしゃる respectfully describes someone else's being, coming, or going.",
+"Please wait a moment.|少々 お待ちください 。|1|お待ちします/お待ちになります/お待ちしました|お + verb stem + ください is a respectful request. 待つ → 待ち."
+]);
+addPack(2,"Speak humbly","Humble speech · embedded questions",`
+参る|まいる|to go / come (humble)|verb
+申す|もうす|to say / be called (humble)|verb
+いただく|いただく|to receive / eat / drink (humble)|verb
+伺う|うかがう|to visit / ask (humble)|verb
+おる|おる|to be (humble)|verb
+いたす|いたす|to do (humble)|verb
+受付|うけつけ|reception desk|noun
+面接|めんせつ|interview|noun
+資料|しりょう|materials / documents|noun
+連絡先|れんらくさき|contact details|noun
+誠に|まことに|truly (formal)|adverb
+後ほど|のちほど|later (formal)|adverb`,[
+"My name is Mori.|森 と 申します 。|2|おっしゃいます/いらっしゃいます/召し上がります|申す is the humble counterpart of 言う; it is used for your own name in introductions.",
+"Do you know when the meeting is?|会議 が いつか 知っていますか 。|2|いつを/いつに/いつで|An embedded question ends in か: 会議がいつか, when the meeting is."
+]);
+addPack(2,"Another perspective","Passive · purpose · while",`
+褒める|ほめる|to praise|verb
+叱る|しかる|to scold|verb
+盗む|ぬすむ|to steal|verb
+招待する|しょうたいする|to invite|verb
+頼む|たのむ|to request / rely on|verb
+警察|けいさつ|police|noun
+泥棒|どろぼう|thief|noun
+理由|りゆう|reason|noun
+迷惑|めいわく|trouble / nuisance|noun
+恥ずかしい|はずかしい|embarrassed / shy|い-adjective
+急に|きゅうに|suddenly|adverb
+とうとう|とうとう|finally / in the end|adverb`,[
+"I was praised by the teacher.|私 は 先生 に 褒められました 。|4|褒めました/褒めさせました/褒めています|The passive of 褒める is 褒められる. に marks the person who performed the action.",
+"I study while listening to music.|音楽 を 聞きながら 勉強します 。|2|聞いてから/聞く前に/聞いたあとで|Verb stem + ながら expresses simultaneous actions by the same subject."
+]);
+addPack(2,"Let someone try","Causative · permission · expectations",`
+任せる|まかせる|to entrust / leave to someone|verb
+許す|ゆるす|to permit / forgive|verb
+反対する|はんたいする|to oppose|verb
+賛成する|さんせいする|to agree / support|verb
+自由|じゆう|freedom|noun
+責任|せきにん|responsibility|noun
+規則|きそく|rule / regulation|noun
+意見|いけん|opinion|noun
+厳格|げんかく|strict / rigorous|な-adjective
+十分|じゅうぶん|sufficient|な-adjective
+なるべく|なるべく|as much as possible|adverb
+必ず|かならず|without fail|adverb`,[
+"The teacher made the student read the book.|先生 は 学生 に 本 を 読ませました 。|6|読まれました/読みました/読めました|The causative of 読む is 読ませる. This context uses に for the person made to perform the transitive action.",
+"Please let me rest today.|今日 は 休ませてください 。|2|休んでください/休まないでください/休みましょう|Causative て-form + ください can ask permission to do something yourself."
+]);
+addPack(2,"Finish with confidence","Causative passive · even if · decisions",`
+困る|こまる|to be troubled|verb
+頑張る|がんばる|to persevere / do one's best|verb
+諦める|あきらめる|to give up|verb
+成功する|せいこうする|to succeed|verb
+失敗する|しっぱいする|to fail|verb
+努力|どりょく|effort|noun
+目標|もくひょう|goal / target|noun
+結果|けっか|result|noun
+自信|じしん|confidence|noun
+悔しい|くやしい|frustrated / bitterly disappointed|い-adjective
+やっと|やっと|at last / with difficulty|adverb
+だんだん|だんだん|gradually|adverb`,[
+"I was made to work overtime by my boss.|私 は 上司 に 残業させられました 。|4|残業しました/残業させました/残業できます|Causative passive combines being made to act with passive perspective: する → させられる.",
+"Even if it rains, I will go.|雨が降っても 行きます 。|0|雨が降ったら/雨が降るまで/雨が降る前に|て-form + も expresses even if or even though."
+]);
+
+/* Calendar and counter content is generated from explicit readings. */
+const EXTRA=[];
+function extra(id,pack,jp,kana,en,type){EXTRA.push({id,pack,jp,kana,en,type,kind:"word"})}
+const monthRead="いち に さん し ご ろく しち はち く じゅう じゅういち じゅうに".split(" ");
+monthRead.forEach((r,i)=>extra("month"+(i+1),3,`${i+1}月`,r+"がつ",new Date(2020,i,1).toLocaleString("en",{month:"long"}),"calendar"));
+const dateRead="ついたち ふつか みっか よっか いつか むいか なのか ようか ここのか とおか じゅういちにち じゅうににち じゅうさんにち じゅうよっか じゅうごにち じゅうろくにち じゅうしちにち じゅうはちにち じゅうくにち はつか にじゅういちにち にじゅうににち にじゅうさんにち にじゅうよっか にじゅうごにち にじゅうろくにち にじゅうしちにち にじゅうはちにち にじゅうくにち さんじゅうにち さんじゅういちにち".split(" ");
+dateRead.forEach((r,i)=>extra("date"+(i+1),3,`${i+1}日`,r,`day ${i+1} of the month`,"calendar"));
+["月曜日|げつようび|Monday","火曜日|かようび|Tuesday","水曜日|すいようび|Wednesday","木曜日|もくようび|Thursday","金曜日|きんようび|Friday","土曜日|どようび|Saturday","日曜日|にちようび|Sunday"].forEach((s,i)=>{const a=s.split("|");extra("week"+i,3,...a,"calendar")});
+"いち に さん よ ご ろく しち はち く じゅう じゅういち じゅうに".split(" ").forEach((r,i)=>extra("hour"+(i+1),3,`${i+1}時`,r+"じ",`${i+1} o'clock`,"time"));
+[[1,"いっぷん"],[2,"にふん"],[3,"さんぷん"],[4,"よんぷん"],[5,"ごふん"],[6,"ろっぷん"],[7,"ななふん"],[8,"はっぷん"],[9,"きゅうふん"],[10,"じゅっぷん"],[20,"にじゅっぷん"],[30,"さんじゅっぷん"]].forEach(([n,r])=>extra("minute"+n,3,`${n}分`,r,`${n} minute${n===1?"":"s"}`,"time"));
+"ひとり ふたり さんにん よにん ごにん ろくにん しちにん はちにん きゅうにん じゅうにん".split(" ").forEach((r,i)=>extra("person"+i,4,`${i+1}人`,r,`${i+1} person${i?"s":""}`,"counter"));
+"ひとつ ふたつ みっつ よっつ いつつ むっつ ななつ やっつ ここのつ とお".split(" ").forEach((r,i)=>extra("thing"+i,4,i===9?"十":`${i+1}つ`,r,`${i+1} generic thing${i?"s":""}`,"counter"));
+EXTRA.forEach(x=>PACKS[x.pack-1].v.push(x));
+
+const PAIRS=[
+["大きい","小さい"],["高い","安い"],["新しい","古い"],["暑い","寒い"],
+["難しい","易しい"],["静か","賑やか"],["長い","短い"],["上手","下手"],
+["速い","遅い"],["暖かい","涼しい"],["便利","不便"],["嬉しい","悲しい"],
+["右","左"],["上","下"],["中","外"]
+];
+const kanaH="あ い う え お か き く け こ さ し す せ そ た ち つ て と な に ぬ ね の は ひ ふ へ ほ ま み む め も や ゆ よ ら り る れ ろ わ を ん が ぎ ぐ げ ご ざ じ ず ぜ ぞ だ ぢ づ で ど ば び ぶ べ ぼ ぱ ぴ ぷ ぺ ぽ".split(" ");
+const kanaR="a i u e o ka ki ku ke ko sa shi su se so ta chi tsu te to na ni nu ne no ha hi fu he ho ma mi mu me mo ya yu yo ra ri ru re ro wa wo n ga gi gu ge go za ji zu ze zo da ji zu de do ba bi bu be bo pa pi pu pe po".split(" ");
+const KANA=kanaH.flatMap((h,i)=>[h,String.fromCharCode(h.charCodeAt(0)+96)].map((jp,j)=>({id:`k${i}-${j}`,pack:0,kind:"kana",jp,kana:jp,en:kanaR[i],type:j?"katakana":"hiragana"})));
+const ALL=PACKS.flatMap(p=>[...p.v,...p.g]);
+const BYID=Object.fromEntries([...ALL,...KANA].map(x=>[x.id,x]));
+
+/* ==========================================================
+   PROGRESS MODULE — versioned, local, exportable.
+   Retention counts distinct local calendar days, not clicks.
+   ========================================================== */
+const KEY="hitoiki-japanese-v1";
+function defaults(){return {version:1,items:{},checks:{},daily:{},prefs:{reading:true,goal:12,kana:"both"},visits:[],sessions:0}}
+let S=defaults(),storageOK=true;
+try{const raw=localStorage.getItem(KEY);if(raw)S=validateSave(JSON.parse(raw));}catch(e){storageOK=false}
+function validateSave(o){
+ if(!o||o.version!==1||!o.items||!o.checks||!o.daily||!o.prefs)throw Error("Unrecognized save format");
+ const n=defaults(),date=/^\d{4}-\d{2}-\d{2}$/;
+ for(const [id,x] of Object.entries(o.items)){
+  if(!BYID[id]||!x||!Number.isFinite(x.wins)||x.wins<0||!Array.isArray(x.days)||!x.days.every(d=>typeof d==="string"&&date.test(d))||!Number.isFinite(x.due))throw Error("Invalid item progress");
+  n.items[id]={wins:x.wins,days:[...new Set(x.days)],due:x.due,lapses:Number.isFinite(x.lapses)&&x.lapses>=0?x.lapses:0};
+ }
+ for(const [id,c] of Object.entries(o.checks)){
+  if(!PACKS.some(p=>String(p.id)===id)||!c||!Number.isFinite(c.score)||c.score<0||c.score>1||!Number.isFinite(c.grammar)||c.grammar<0||c.grammar>4)throw Error("Invalid checkpoint");
+  n.checks[id]={score:c.score,grammar:c.grammar,date:typeof c.date==="string"?c.date:""};
+ }
+ for(const [d,c] of Object.entries(o.daily)){if(!date.test(d)||!Number.isInteger(c)||c<0)throw Error("Invalid daily progress");n.daily[d]=c}
+ n.prefs={reading:o.prefs.reading!==false,goal:[6,12,24].includes(o.prefs.goal)?o.prefs.goal:12,kana:["both","hiragana","katakana"].includes(o.prefs.kana)?o.prefs.kana:"both"};
+ n.visits=Array.isArray(o.visits)?[...new Set(o.visits.filter(d=>typeof d==="string"&&date.test(d)))]:[];
+ n.sessions=Number.isInteger(o.sessions)&&o.sessions>=0?o.sessions:0;
+ return n;
+}
+function dayKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));storageOK=true}catch(e){storageOK=false;toast("Progress cannot be stored here. Export a backup before leaving.")}updateHeader()}
+function record(id,ok){
+ const now=Date.now(),x=Object.assign({wins:0,days:[],due:0,lapses:0},S.items[id]||{});x.days=[...x.days];
+ if(ok){x.wins++;const d=dayKey();if(!x.days.includes(d))x.days.push(d);x.due=now+[1,3,7,14,30][Math.min(x.days.length-1,4)]*86400000}
+ else{x.lapses++;x.due=now+600000}
+ S.items[id]=x;
+ if(!S.visits.includes(dayKey()))S.visits.push(dayKey());
+ save();
+}
+const known=x=>(S.items[x.id]?.wins||0)>0;
+const retained=x=>(S.items[x.id]?.days.length||0)>=2;
+function coverage(p){return [...p.v,...p.g].filter(known).length/(p.v.length+p.g.length)}
+function passed(p){const c=S.checks[p.id];return !!c&&c.score>=.8&&c.grammar>=3}
+function book2Ready(){const ps=PACKS.filter(p=>p.book===1),words=ps.flatMap(p=>p.v);return ps.every(p=>passed(p)&&coverage(p)>=.7)&&words.filter(retained).length/words.length>=.7}
+function unlocked(p){if(p.book===2&&!book2Ready())return false;return p.id===1||passed(PACKS[p.id-2])&&coverage(PACKS[p.id-2])>=.7}
+function available(){return PACKS.filter(unlocked)}
+function currentPack(){return available().find(p=>!passed(p)||coverage(p)<.7)||available().at(-1)}
+function dueItems(){return ALL.filter(x=>unlocked(PACKS[x.pack-1])&&S.items[x.id]&&S.items[x.id].due<=Date.now())}
+function checkReady(p){return unlocked(p)&&coverage(p)>=.7}
+function shuffled(a){return [...a].sort(()=>0).map(x=>({x,r:Math.random()})).sort((a,b)=>a.r-b.r).map(o=>o.x)}
+function normalize(s){return s.normalize("NFKC").replace(/[\u30a1-\u30f6]/g,c=>String.fromCharCode(c.charCodeAt(0)-96)).replace(/[\s。、！？!?・]/g,"").toLowerCase()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+/* ==========================================================
+   GAME REGISTRY — add new renderers/generators independently.
+   Every question points to one stable curriculum item.
+   ========================================================== */
+const GAMES={};
+function registerGame(id,spec){GAMES[id]=spec}
+function chooseOptions(answer,candidates){return shuffled([answer,...shuffled([...new Set(candidates)].filter(x=>x!==answer)).slice(0,3)])}
+function wordPool(x){return available().flatMap(p=>p.v).filter(v=>v.type===x.type)}
+registerGame("words",{icon:"◈",title:"Word garden",desc:"Recognize words in both directions.",items:()=>available().flatMap(p=>p.v),
+ question(x){
+  const reverse=Math.random()<.4,pool=wordPool(x);
+  return {item:x,mode:"choice",label:reverse?"Choose the Japanese":"Choose the meaning",prompt:reverse?x.en:x.jp,reading:reverse?"":x.kana,answer:reverse?x.jp:x.en,
+   options:chooseOptions(reverse?x.jp:x.en,pool.map(v=>reverse?v.jp:v.en)),explain:`${x.jp}（${x.kana}） — ${x.en}`};
+ }});
+registerGame("recall",{icon:"⌨",title:"Recall room",desc:"Type the reading from memory. Kana or kanji accepted.",items:()=>available().flatMap(p=>p.v),
+ question:x=>({item:x,mode:"type",label:"Recall the Japanese · use your Japanese keyboard",prompt:x.en,answer:x.kana,accept:[x.kana,x.jp],explain:`${x.jp}（${x.kana}） — ${x.en}`})});
+registerGame("opposites",{icon:"⇄",title:"Opposite alley",desc:"Find the other end: big ↔ small, quiet ↔ lively.",items(){
+ const words=available().flatMap(p=>p.v);return words.filter(x=>PAIRS.some(p=>p.includes(x.jp)&&words.some(y=>y.jp===p.find(z=>z!==x.jp))));
+ },question(x){
+ const pair=PAIRS.find(p=>p.includes(x.jp)),target=available().flatMap(p=>p.v).find(v=>v.jp===pair.find(z=>z!==x.jp));
+ return {item:x,mode:"choice",label:"Choose the opposite",prompt:x.jp,reading:S.prefs.reading?`${x.kana} · ${x.en}`:x.en,answer:target.jp,
+ options:chooseOptions(target.jp,available().flatMap(p=>p.v).filter(v=>v.type===target.type).map(v=>v.jp)),explain:`${x.jp}（${x.en}） ↔ ${target.jp}（${target.kana} · ${target.en}）`};
+ }});
+registerGame("calendar",{icon:"▦",title:"Calendar café",desc:"Dates, weekdays, time, people, and general counters.",items:()=>available().flatMap(p=>p.v).filter(x=>["calendar","counter","time"].includes(x.type)),
+ question(x){return {item:x,mode:"choice",label:"Choose the reading",prompt:x.jp,reading:x.en,answer:x.kana,options:chooseOptions(x.kana,wordPool(x).map(v=>v.kana)),explain:`${x.jp} → ${x.kana} · ${x.en}. Calendar dates and counters have irregular readings.`}}});
+registerGame("patterns",{icon:"◌",title:"Pattern lab",desc:"Choose a particle or form, then learn why it fits.",items:()=>available().flatMap(p=>p.g),
+ question:x=>({item:x,mode:"choice",label:"Complete the sentence",prompt:x.tokens.map((t,i)=>i===x.blank?"＿＿":t).join(""),reading:x.en,answer:x.answer,options:shuffled([x.answer,...x.other]),explain:x.note})});
+registerGame("builder",{icon:"▤",title:"Sentence studio",desc:"Rebuild a model sentence from shuffled tiles.",items:()=>available().flatMap(p=>p.g),
+ question:x=>({item:x,mode:"order",label:"Rebuild the model · tap tiles, tap again to undo",prompt:x.en,reading:"",answer:x.jp,tokens:x.tokens,explain:`${x.jp} — ${x.note}`})});
+
+/* ==========================================================
+   SESSION ENGINE
+   Finite rounds, explanations, optional corrections, no timer.
+   ========================================================== */
+let view="today",book=1,Q=null,round=null,answered=false,selected=[],toastTimer;
+function makeQuestion(x,mode){
+ if(x.kind==="kana")return {item:x,mode:"choice",label:`${x.type} refresher`,prompt:x.jp,reading:"",answer:x.en,options:chooseOptions(x.en,KANA.map(k=>k.en)),explain:`${x.jp} → ${x.en}. を is usually pronounced o as a particle; ぢ/ヂ and づ/ヅ normally sound like ji and zu.`};
+ return GAMES[mode|| (x.kind==="grammar"?"patterns":"words")].question(x);
+}
+function nextReviewOrder(a){
+ return shuffled(a).sort((a,b)=>{
+  const sa=S.items[a.id],sb=S.items[b.id];
+  const priority=x=>!x?1:x.due<=Date.now()?0:2;
+  return priority(sa)-priority(sb)||(sa?.due||0)-(sb?.due||0);
+ });
+}
+function startRound(title,questions,opts={}){
+ if(!questions.length){toast("This game needs more unlocked content. Continue your current pack.");return}
+ S.sessions++;save();
+ round={title,questions,at:0,correct:0,grammarCorrect:0,results:[],opts,start:Date.now()};
+ Q=null;nextQuestion();
+}
+function startDaily(){
+ const remaining=Math.max(0,S.prefs.goal-(S.daily[dayKey()]||0));
+ if(!remaining){renderDoneToday();return}
+ const p=currentPack(),pool=nextReviewOrder([...dueItems(),...p.v,...p.g]),seen=new Set(),chosen=[];
+ for(const x of pool){if(!seen.has(x.id)){chosen.push(x);seen.add(x.id)}if(chosen.length>=remaining)break}
+ const qs=chosen.map((x,i)=>makeQuestion(x,x.kind==="grammar"?(i%2?"builder":"patterns"):i%4===3&&known(x)?"recall":"words"));
+ startRound("Today's little route",qs,{daily:true});
+}
+function startGame(id,packId){
+ let items=packId?[...PACKS[packId-1].v,...PACKS[packId-1].g]:GAMES[id].items();
+ if(packId)items=items.filter(x=>id==="patterns"||id==="builder"?x.kind==="grammar":x.kind==="word");
+ startRound(GAMES[id].title,nextReviewOrder(items).slice(0,12).map(x=>makeQuestion(x,id)),{});
+}
+function startPack(id){
+ const p=PACKS[id-1];if(!unlocked(p))return;
+ const items=nextReviewOrder([...p.v,...p.g]).slice(0,12);
+ startRound(p.title,items.map((x,i)=>makeQuestion(x,x.kind==="grammar"?(i%2?"builder":"patterns"):known(x)&&i%3===0?"recall":"words")),{});
+}
+function startCheck(id){
+ const p=PACKS[id-1];if(!checkReady(p)){toast("First get 70% of this pack correct at least once.");return}
+ const grammar=p.g.flatMap(x=>[makeQuestion(x,"patterns"),makeQuestion(x,"builder")]);
+ const words=shuffled(p.v).slice(0,6).map((x,i)=>makeQuestion(x,i<3?"recall":"words"));
+ startRound(`${p.title} · checkpoint`,shuffled([...grammar,...words]),{check:id});
+}
+function startKana(){
+ const items=KANA.filter(x=>S.prefs.kana==="both"||x.type===S.prefs.kana);
+ startRound("Kana warm-up",nextReviewOrder(items).slice(0,12).map(x=>makeQuestion(x)),{});
+}
+function startReview(){
+ const items=dueItems();if(!items.length){toast("Nothing is due. Your current pack is ready when you are.");return}
+ startRound("Spaced review",nextReviewOrder(items).slice(0,12).map(x=>makeQuestion(x,known(x)&&x.kind==="word"?"recall":undefined)),{});
+}
+function nextQuestion(){
+ if(round.at>=round.questions.length){finishRound();return}
+ Q=round.questions[round.at];answered=false;selected=[];
+ const x=Q.item;
+ if(!known(x)&&!round.opts.check)renderTeach();else renderQuestion();
+}
+function renderTeach(){
+ const x=Q.item;drawNav("");
+ app.innerHTML=`<section class="play">
+ <div class="row between"><span class="eyebrow">Meet this first</span><button class="small quiet" onclick="leaveRound()">Save & leave</button></div>
+ <div class="card">
+ <span class="pill">${esc(x.type)} · ${x.pack?esc(PACKS[x.pack-1].title):"Kana"}</span>
+ <div class="question" lang="ja">${esc(x.jp)}</div>
+ ${x.kana?`<div class="reading" lang="ja">${esc(x.kana)}</div>`:""}
+ <p class="definition">${esc(x.en)}</p>
+ ${x.note?`<p class="note">${esc(x.note)}</p>`:""}
+ ${x.type==="な-adjective"?'<p class="hint">Use な before a noun: 静かな町. Use です at the end of a polite sentence.</p>':""}
+ <button class="primary space" onclick="renderQuestion()">Ready to try →</button>
+ </div><p class="hint space">New material gets an introduction. Checkpoints ask you to recall it unaided.</p>
+ </section>`;
+}
+function renderQuestion(){
+ drawNav("");
+ const progress=round.at/round.questions.length*100;
+ app.innerHTML=`<section class="play">
+ <div class="row between"><span class="muted">${esc(round.title)}</span><button class="small quiet" onclick="leaveRound()">Save & leave</button></div>
+ <div class="row between space"><span class="label">${round.at+1} / ${round.questions.length}</span><span class="label">No timer. Take a breath.</span></div>
+ <div class="bar" style="margin:9px 0 23px"><span style="width:${progress}%"></span></div>
+ <div class="card">
+ <span class="eyebrow">${esc(Q.label)}</span>
+ <h1 class="question" ${Q.mode==="order"?"":'lang="ja"'}>${esc(Q.prompt)}</h1>
+ <div class="reading">${Q.reading&&(S.prefs.reading||Q.item.kind==="grammar"||GAMES.calendar.title===round.title)?esc(Q.reading):""}</div>
+ <div id="interaction"></div><div id="feedback" aria-live="polite"></div>
+ </div><p class="hint space">${Q.mode==="choice"?"Keys 1–4 choose · ":""}Enter continues after feedback. Progress saves after each answer.</p>
+ </section>`;
+ const el=document.getElementById("interaction");
+ if(Q.mode==="choice"){
+  el.innerHTML=`<div class="answers">${Q.options.map((a,i)=>`<button class="answer" id="answer${i}" onclick="choose(${i})"><b>${i+1}</b><span>${esc(a)}</span></button>`).join("")}</div>`;
+ }else if(Q.mode==="type"){
+  el.innerHTML=`<form id="recallForm"><input id="typed" class="entry" aria-label="Japanese answer" lang="ja" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="かな / 漢字"><div class="row space"><button class="primary" type="submit">Check</button><button type="button" onclick="submitAnswer(false)">I don't remember</button></div><p class="hint space">Use a Japanese keyboard. Kana and the displayed word's kanji spelling both count.</p></form>`;
+  document.getElementById("recallForm").onsubmit=e=>{e.preventDefault();const input=document.getElementById("typed");submitAnswer(Q.accept.some(a=>normalize(a)===normalize(input.value)))};
+ }else{
+  Q.tileOrder=shuffled(Q.tokens.map((_,i)=>i));renderTiles();
+ }
+}
+function renderTiles(){
+ document.getElementById("interaction").innerHTML=`
+ <div class="sentence" aria-label="Your sentence">${selected.map(i=>`<button class="token" onclick="removeTile(${i})" lang="ja">${esc(Q.tokens[i])}</button>`).join("")||'<span class="muted">Your sentence goes here</span>'}</div>
+ <div class="tokens">${Q.tileOrder.map(i=>`<button class="token" onclick="addTile(${i})" ${selected.includes(i)||answered?"disabled":""} lang="ja">${esc(Q.tokens[i])}</button>`).join("")}</div>
+ <div class="row space"><button class="primary" onclick="checkTiles()" ${answered?"disabled":""}>Check sentence</button><button onclick="submitAnswer(false)" ${answered?"disabled":""}>Show model</button></div>
+ <p class="hint space">Reconstruct the model word order. This game does not grade every possible Japanese translation.</p>`;
+}
+function addTile(i){if(answered||selected.includes(i))return;selected.push(i);renderTiles()}
+function removeTile(i){if(answered)return;selected=selected.filter(n=>n!==i);renderTiles()}
+function checkTiles(){submitAnswer(normalize(selected.map(i=>Q.tokens[i]).join(""))===normalize(Q.answer))}
+function choose(i){
+ if(answered||!Q||Q.mode!=="choice"||!Q.options[i])return;
+ const ok=Q.options[i]===Q.answer;
+ submitAnswer(ok);
+ Q.options.forEach((a,j)=>{const b=document.getElementById("answer"+j);if(a===Q.answer)b.classList.add("correct");if(j===i&&!ok)b.classList.add("wrong")});
+}
+function submitAnswer(ok){
+ if(answered||!round)return;answered=true;
+ if(ok){round.correct++;if(Q.item.kind==="grammar")round.grammarCorrect++}
+ round.results.push({id:Q.item.id,ok,q:Q});
+ record(Q.item.id,ok);
+ if(round.opts.daily){S.daily[dayKey()]=(S.daily[dayKey()]||0)+1;save()}
+ document.querySelectorAll("#interaction button,#interaction input").forEach(el=>el.disabled=true);
+ document.getElementById("feedback").innerHTML=`<div class="feedback">
+ <strong class="${ok?"good":"gold"}">${ok?"✓ Got it.":"A useful one to revisit."}</strong>
+ <p>${esc(Q.explain)}</p>
+ ${!ok&&Q.mode==="order"?`<p lang="ja">${esc(Q.answer)}</p>`:""}
+ ${!ok&&Q.mode==="type"?`<p lang="ja">${esc(Q.item.jp)} · ${esc(Q.item.kana)}</p>`:""}
+ <button id="next" class="primary" onclick="advance()">Continue →</button></div>`;
+}
+function advance(){if(!answered)return;round.at++;nextQuestion()}
+function leaveRound(){
+ if(!round)return;
+ round=null;Q=null;go("today");toast("Your answered questions are saved.");
+}
+function finishRound(){
+ const r=round,score=r.correct/r.questions.length,errors=r.results.filter(x=>!x.ok),minutes=Math.max(1,Math.round((Date.now()-r.start)/60000));
+ let checkpoint="";
+ if(r.opts.check){
+  const p=PACKS[r.opts.check-1],ok=score>=.8&&r.grammarCorrect>=3;
+  const prev=S.checks[p.id];
+  if(ok||!prev||!passed(p))S.checks[p.id]={score,grammar:r.grammarCorrect,date:dayKey()};
+  save();
+  checkpoint=`<p class="${ok?"good":"gold"}">${ok?"Checkpoint passed.":`Checkpoint needs another try: ${Math.round(score*100)}% overall · ${r.grammarCorrect}/4 grammar.`}</p>`;
+ }
+ round.finished=true;Q=null;
+ drawNav("today");
+ app.innerHTML=`<section class="play"><div class="card finish">
+ <div class="big">${score>=.8?"🌿":"🌱"}</div>
+ <div class="eyebrow">A real stopping point</div>
+ <h1>${r.opts.daily?"That’s enough for today.":"Round complete."}</h1>
+ <p class="muted">${r.correct} / ${r.questions.length} correct · about ${minutes} minute${minutes===1?"":"s"}</p>
+ ${checkpoint}
+ <p>${errors.length?`${errors.length} question${errors.length===1?"":"s"} saved for review. No lost hearts.`:"Nice work. Let it settle before the next review."}</p>
+ <button class="primary space" onclick="endSession()">Finish & close the loop</button>
+ ${errors.length?'<div class="space"><button class="quiet small" onclick="retryMistakes()">Optional: repair these mistakes</button></div>':""}
+ <p class="hint space">Put the phone down. Get water, stretch, or use one Japanese sentence aloud.</p>
+ </div></section>`;
+}
+function retryMistakes(){
+ const mistakes=round.results.filter(x=>!x.ok),ids=new Set();
+ const qs=mistakes.filter(x=>!ids.has(x.id)&&ids.add(x.id)).map(x=>makeQuestion(BYID[x.id],x.q.mode==="order"?"builder":x.q.mode==="type"?"recall":BYID[x.id].kind==="grammar"?"patterns":undefined));
+ startRound("A little repair",qs,{});
+}
+function endSession(){round=null;Q=null;go("today")}
+
+/* ==========================================================
+   VIEWS
+   ========================================================== */
+const app=document.getElementById("app");
+function drawNav(active=view){
+ document.getElementById("nav").innerHTML=[["today","Today"],["path","Learning path"],["games","Arcade"],["notebook","Notebook"],["settings","Settings"]].map(([v,t])=>`<button class="${active===v?"active":""}" onclick="navigate('${v}')">${t}</button>`).join("");
+ updateHeader();
+}
+function navigate(v){
+ if(round&&!round.finished){
+  if(!confirm("Leave this round? Answered questions are already saved."))return;
+ }
+ round=null;Q=null;go(v);
+}
+function go(v){view=v;drawNav();({today:renderToday,path:renderPath,games:renderGames,notebook:renderNotebook,settings:renderSettings})[v]();window.scrollTo({top:0,behavior:"instant"})}
+function updateHeader(){document.getElementById("headerStatus").textContent=storageOK?`${S.visits.length} study day${S.visits.length===1?"":"s"} · saved here`:"Export a backup"}
+function toast(msg){clearTimeout(toastTimer);const t=document.getElementById("toast");t.textContent=msg;t.classList.remove("hidden");toastTimer=setTimeout(()=>t.classList.add("hidden"),6500)}
+function renderToday(){
+ const p=currentPack(),done=S.daily[dayKey()]||0,goal=S.prefs.goal,ret=ALL.filter(retained).length,dues=dueItems().length;
+ app.innerHTML=`
+ <div class="card hero">
+ <div><div class="eyebrow">Replace the scroll</div><h1>A small lesson.<br>A little more life.</h1>
+ <p class="muted">${done>=goal?"Your daily route is complete. You can stop here.":"A finite route through Japanese. Learn a few things, retrieve a few things, then leave."}</p>
+ <div class="row actions"><button class="primary" onclick="${done>=goal?"renderDoneToday()":"startDaily()"}">${done>=goal?"Today is done ✓":done?"Continue today’s route →":"Start today’s route →"}</button></div>
+ <p class="hint space">${Math.min(done,goal)} / ${goal} daily questions · roughly ${goal===6?"2–3":goal===12?"4–6":"8–12"} minutes · no countdown</p>
+ <div class="bar"><span style="width:${Math.min(100,done/goal*100)}%"></span></div></div>
+ <div class="garden" aria-label="Your quiet study garden"><span class="plant">🌱</span><span class="plant">${ret>30?"🌳":ret>5?"🌿":"🌱"}</span><span class="plant">🌿</span></div>
+ </div>
+ <div class="grid stats space">
+ <div class="card"><div class="stat">${ALL.filter(known).length}</div><div class="label">items met</div></div>
+ <div class="card"><div class="stat">${ret}</div><div class="label">recalled on 2+ days</div></div>
+ <div class="card"><div class="stat">${dues}</div><div class="label">ready for review</div></div>
+ </div>
+ <div class="grid two space">
+ <div class="card"><span class="eyebrow">Your current pack</span><h2>${esc(p.title)}</h2><p class="muted">${esc(p.focus)}</p><div class="bar"><span style="width:${coverage(p)*100}%"></span></div><p class="hint space">${Math.round(coverage(p)*100)}% introduced successfully · ${passed(p)?"checkpoint passed":"checkpoint ahead"}</p><div class="row"><button onclick="startPack(${p.id})">Practice</button><button onclick="startCheck(${p.id})" ${checkReady(p)?"":"disabled"}>Checkpoint</button></div></div>
+ <div class="card"><span class="eyebrow">Keep it light</span><h2>Choose your energy.</h2><p class="muted">Six questions count. Missing a day costs nothing.</p><div class="row">${[6,12,24].map(n=>`<button class="small ${goal===n?"primary":""}" onclick="setGoal(${n})">${n===6?"Tiny":n===12?"Daily":"Deep"} · ${n}</button>`).join("")}</div><div class="space"><button class="quiet small" onclick="startReview()" ${dues?"":"disabled"}>Review due items · up to 12</button></div></div>
+ </div>
+ <footer>Independent Genki I / II companion. ${PACKS.reduce((n,p)=>n+p.v.length,0)} vocabulary, calendar, and counter entries · ${PACKS.reduce((n,p)=>n+p.g.length,0)} original patterns · ${KANA.length} kana cards. Not a complete textbook word list.</footer>`;
+}
+function renderDoneToday(){
+ drawNav("today");
+ app.innerHTML=`<section class="play"><div class="card finish"><div class="big">🍵</div><div class="eyebrow">Daily route complete</div><h1>You can stop now.</h1><p class="muted">There’s no feed waiting underneath this message.</p><p>Say one sentence aloud.<br>Then take a short walk, stretch, or get some water.</p><button class="primary space" onclick="go('today')">Back to my garden</button><details><summary>I'd like a little more practice</summary><p>Choose a specific activity and finish one round.</p><button class="small" onclick="go('games')">Choose one game</button></details></div></section>`;
+}
+function setGoal(n){S.prefs.goal=n;save();renderToday()}
+function renderPath(){
+ const one=PACKS.filter(p=>p.book===1),words=one.flatMap(p=>p.v),ret=Math.round(words.filter(retained).length/words.length*100),checks=one.filter(passed).length;
+ app.innerHTML=`<div class="row between"><div><div class="eyebrow">Learn before leveling up</div><h1>One grounded step.</h1></div><div class="row"><button class="${book===1?"primary":""}" onclick="book=1;renderPath()">Genki I</button><button class="${book===2?"primary":""}" onclick="book=2;renderPath()">Genki II ${book2Ready()?"":"🔒"}</button></div></div>
+ <p class="muted">Our own topic packs, designed for companion practice. Pack numbers do not mirror textbook lesson numbers.</p>
+ ${book===2&&!book2Ready()?`<div class="card space"><h3>Build the foundations first.</h3><p class="muted">Unlock by passing all 12 first-book checkpoints, reaching 70% successful coverage in every pack, and recalling 70% of first-book vocabulary on at least two different days.</p><div class="row"><span class="pill">${checks}/12 checkpoints</span><span class="pill">${ret}% later-day recall / 70%</span></div><p class="hint space">This is an app readiness check, not certification of complete Genki I proficiency.</p></div>`:""}
+ <div class="space">${PACKS.filter(p=>p.book===book).map(p=>{
+  const open=unlocked(p),c=Math.round(coverage(p)*100);
+  return `<div class="card lesson ${open?"":"locked"}"><div class="lesson-num">${passed(p)?"✓":open?String(p.id-(book===2?12:0)).padStart(2,"0"):"🔒"}</div><div class="grow"><h3>${esc(p.title)}</h3><p class="muted">${esc(p.focus)}</p><div class="row"><span class="pill">${p.v.length} entries · ${p.g.length} patterns</span><span class="pill">${c}% coverage</span>${passed(p)?'<span class="pill good">Checkpoint passed</span>':""}</div>
+  <div class="row space"><button class="small" onclick="startPack(${p.id})" ${open?"":"disabled"}>Practice</button><button class="small" onclick="startCheck(${p.id})" ${checkReady(p)?"":"disabled"}>Checkpoint</button></div>
+  ${open&&!checkReady(p)?'<p class="hint space">Get 70% of the pack correct to open its checkpoint.</p>':!open?'<p class="hint space">Finish the previous pack and the book prerequisites.</p>':""}
+  </div></div>`;
+ }).join("")}</div>
+ <details><summary>How checkpoints work</summary><p>Each checkpoint has 6 vocabulary questions, including 3 typed recalls, and 4 grammar tasks. Pass with at least 80% overall and 3/4 grammar tasks correct. Future packs also require 70% successful coverage in the preceding pack. New content is taught first during practice; checkpoints hide those introductions.</p><p>Recognition, typed recall, and guided sentence reconstruction test different skills. This app does not assess spontaneous conversation, handwriting, or full listening comprehension.</p></details>`;
+}
+function renderGames(){
+ app.innerHTML=`<div class="eyebrow">Pick one. Finish a round.</div><h1>A small arcade.</h1><p class="muted">Every round ends. All games use your unlocked content.</p>
+ <div class="grid two space">${Object.entries(GAMES).map(([id,g])=>`<div class="card"><span class="pill">${g.icon} · up to 12 questions</span><h2 class="space">${g.title}</h2><p class="muted">${g.desc}</p><button onclick="startGame('${id}')" ${g.items().length?"":"disabled"}>${g.items().length?"Play →":"Unlock more content"}</button></div>`).join("")}
+ <div class="card"><span class="pill">あ / ア · up to 12 questions</span><h2 class="space">Kana warm-up</h2><p class="muted">Hiragana and katakana, including voiced and semi-voiced sounds.</p><button onclick="startKana()">Warm up →</button><p class="hint space">Basic and voiced kana. Small kana and combined sounds are not included in this version.</p></div>
+ <div class="card"><span class="pill">↺ · up to 12 questions</span><h2 class="space">Review shelf</h2><p class="muted">Return to items when they are due. Correct recalls space out to 1, 3, 7, 14, then 30 days.</p><button onclick="startReview()" ${dueItems().length?"":"disabled"}>${dueItems().length?"Review →":"Nothing due"}</button></div></div>
+ <details><summary>Good next games to add</summary><ul><li><b>Café shift:</b> take a short order, calculate quantities, and choose an appropriate reply.</li><li><b>Train-platform mystery:</b> solve a finite story using dates, directions, and a timetable.</li><li><b>Listening postcards:</b> short human-recorded clips with transcript reveals and comprehension checks.</li></ul><p>The vocabulary bank, game registry, progress store, and session engine are separate sections of the source. New games can reuse stable item IDs and the existing review scheduler.</p></details>`;
+}
+let notebookPage=0,notebookSearch="",notebookType="all";
+function renderNotebook(){
+ app.innerHTML=`<div class="eyebrow">A reference, not a feed</div><h1>Your notebook.</h1><p class="muted">Browse unlocked content. New words include readings; patterns include explanations.</p><div class="toolbar"><input id="search" placeholder="Search Japanese, reading, or meaning…" aria-label="Search notebook"><select id="typeFilter" aria-label="Content type"><option value="all">All types</option>${["noun","verb","い-adjective","な-adjective","adverb","calendar","counter","time","pattern","question","expression","pronoun"].map(t=>`<option value="${t}">${t}</option>`).join("")}</select></div><div class="card" id="notebookList"></div>`;
+ const input=document.getElementById("search"),filter=document.getElementById("typeFilter");input.value=notebookSearch;filter.value=notebookType;
+ input.oninput=()=>{notebookSearch=input.value;notebookPage=0;drawNotebook()};
+ filter.onchange=()=>{notebookType=filter.value;notebookPage=0;drawNotebook()};drawNotebook();
+}
+function drawNotebook(){
+ const q=normalize(notebookSearch);
+ const items=ALL.filter(x=>unlocked(PACKS[x.pack-1])&&(notebookType==="all"||x.type===notebookType)&&normalize(x.jp+" "+x.kana+" "+x.en).includes(q));
+ const pages=Math.max(1,Math.ceil(items.length/20));notebookPage=Math.min(notebookPage,pages-1);
+ document.getElementById("notebookList").innerHTML=items.slice(notebookPage*20,notebookPage*20+20).map(x=>x.kind==="grammar"?`<details><summary lang="ja">${esc(x.jp)}</summary><p>${esc(x.en)}</p><p>${esc(x.note)}</p><span class="pill">${esc(PACKS[x.pack-1].title)}</span></details>`:`<div class="word-row"><div lang="ja"><strong>${esc(x.jp)}</strong><br><small>${esc(x.kana)}</small></div><span>${esc(x.en)}</span><small>${esc(x.type)} · ${esc(PACKS[x.pack-1].title)}</small><span class="${retained(x)?"good":"muted"}">${retained(x)?"2+ days":known(x)?"met":"new"}</span></div>`).join("")+`
+ ${items.length?"":'<p class="empty muted">No matching entries.</p>'}<div class="row between space"><button class="small" onclick="notebookPage--;drawNotebook()" ${notebookPage?"":"disabled"}>← Previous</button><span class="label">${items.length} items · page ${notebookPage+1}/${pages}</span><button class="small" onclick="notebookPage++;drawNotebook()" ${notebookPage+1<pages?"":"disabled"}>Next →</button></div>`;
+}
+function renderSettings(){
+ app.innerHTML=`<div class="eyebrow">Make this easy to return to</div><h1>Less friction.</h1>
+ <div class="card">
+ <div class="setting"><h3>Daily size</h3><p>A question target, not a timer. Change it whenever you need.</p><div class="row">${[6,12,24].map(n=>`<button class="${S.prefs.goal===n?"primary":""}" onclick="S.prefs.goal=${n};save();renderSettings()">${n} questions</button>`).join("")}</div></div>
+ <div class="setting"><h3>Reading help</h3><p>Show kana under vocabulary prompts. Teaching cards and the notebook always include readings.</p><label><input type="checkbox" ${S.prefs.reading?"checked":""} onchange="S.prefs.reading=this.checked;save()"> Show reading help</label></div>
+ <div class="setting"><h3>Kana warm-up</h3><select aria-label="Kana sets" onchange="S.prefs.kana=this.value;save()">${["both","hiragana","katakana"].map(k=>`<option ${S.prefs.kana===k?"selected":""}>${k}</option>`).join("")}</select></div>
+ <div class="setting"><h3>Keep your progress</h3><p>Progress stays in this browser when storage is available. It does not sync between devices. Export before clearing browser data.</p><div class="row"><button onclick="exportProgress()">Export progress</button><button onclick="document.getElementById('importSave').click()">Import progress</button><button onclick="downloadApp()">Download this HTML</button></div><input type="file" id="importSave" accept=".json,application/json" hidden onchange="importProgress(this.files[0])"></div>
+ <details><summary>Content scope and accuracy</summary><p>This is an independent companion covering common beginner Japanese topics across a 12-pack first-book route and an 11-pack second-book route. It does not reproduce the textbooks' complete vocabulary lists, dialogues, or exercises. Pack ordering and example sentences are original and are not an exact lesson index.</p><p>Includes nouns, verbs, い/な adjectives, adverbs, selected opposites, all 31 calendar-date readings, 12 months, weekdays, hours, selected minutes, and basic people/general counters. The current grammar bank is a starter set of 46 patterns, not exhaustive coverage of both books.</p><p>Some words have multiple meanings. The app supplies the meaning relevant to each card. Counter cards teach common readings; valid alternate readings are not exhaustively listed.</p><p>Publisher reference: <a href="https://genki3.japantimes.co.jp/" target="_blank" rel="noopener">Genki official website</a>. This app is not affiliated with the publisher.</p></details>
+ <details><summary>Adding content and games</summary><p>In the source, addPack(book, title, focus, vocabularyText, grammarPatterns) appends a content pack. Preserve existing pack order and item IDs when updating a used copy. registerGame(id, spec) adds an arcade game; spec contains title, icon, desc, items(), and question(item).</p><p>Questions use one of three shared renderers: choice, type, or order. Progress is attached to curriculum item IDs, so game variety does not fragment review history. New game mechanics can add renderers to the session engine.</p></details>
+ <details><summary>Verification and limits</summary><p>The review scheduling model was checked for same-day versus later-day recalls and retry timing. The execution environment was unavailable, so this response was not saved or hosted and browser interactions have not been tested here. Use Download this HTML to keep a local copy.</p><p>There is no backend, account, analytics, remote AI generation, or external dependency. Listening and pronunciation assessment are not included. No streak is reset after an absence.</p></details>
+ </div>`;
+}
+function downloadBlob(text,name,type){
+ const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement("a");
+ a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
+function exportProgress(){downloadBlob(JSON.stringify(S,null,2),`hitoiki-progress-${dayKey()}.json`,"application/json")}
+function downloadApp(){downloadBlob("<!doctype html>\n"+document.documentElement.outerHTML,"hitoiki-japanese.html","text/html")}
+async function importProgress(file){
+ if(!file)return;
+ if(file.size>2e6){toast("That file is too large for a progress backup.");return}
+ try{const next=validateSave(JSON.parse(await file.text()));if(!confirm("Replace progress in this browser with this backup?"))return;S=next;save();renderSettings();toast("Progress imported.")}
+ catch(e){toast("Could not import: this is not a valid Hitoiki progress backup.")}
+}
+document.addEventListener("keydown",e=>{
+ if(e.isComposing||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(!round||round.finished||!Q)return;
+ if(e.target.matches("input,textarea,select"))return;
+ if(answered&&e.key==="Enter"){e.preventDefault();advance();return}
+ if(!answered&&Q.mode==="choice"&&/^[1-4]$/.test(e.key)&&document.getElementById("interaction")){e.preventDefault();choose(Number(e.key)-1)}
+});
+/* Small content checks run before showing the app. */
+function validateContent(){
+ const ids=new Set();
+ for(const x of [...ALL,...KANA]){
+  if(ids.has(x.id)||!x.jp||!x.en)throw Error("Invalid content entry");
+  ids.add(x.id);
+  if(x.kind==="grammar"&&(!x.answer||x.other.includes(x.answer)||new Set(x.other).size!==3))throw Error("Invalid grammar options");
+ }
+ if(dateRead.length!==31||monthRead.length!==12||kanaH.length!==kanaR.length||PACKS.length!==23)throw Error("Incomplete content structure");
+}
+window.Hitoiki={PACKS,GAMES,addPack,registerGame};
+try{validateContent();go("today");if(!storageOK)toast("Browser storage is unavailable or a save could not be read. Export your progress before leaving.")}
+catch(e){app.innerHTML='<div class="card"><h2>Content could not load.</h2><p>Please reload a fresh copy of this app.</p></div>';console.error(e)}
+</script>
+</body>
+</html>
